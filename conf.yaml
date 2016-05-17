@@ -1,0 +1,31 @@
+backend:
+  path:
+    /Users/olaputin/work/rs/Python-Backends/revelV2
+  bin:
+    /Users/olaputin/virtenv/rs/bin/python
+pootle:
+  enable:
+    True
+  bin:
+    /Users/olaputin/dev/pootle/env/bin/pootle
+
+translations:
+  path:
+    /Users/olaputin/dev/pootle/env/lib/python2.7/site-packages/pootle/translations
+
+msgmerge:
+  /usr/local/bin/msgmerge
+release:
+  master:
+    master
+#  r2.16:
+#    release/2.16
+
+languages:
+  - ru
+
+commit:
+  False
+
+makemessages:
+  True
