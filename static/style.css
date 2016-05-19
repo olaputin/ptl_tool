@@ -1,0 +1,34 @@
+.operation_button {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.revel_color {
+    color: rgb(0, 163, 224);
+    font-size: 61.25px;
+    font-weight: normal;
+}
+
+.spinner {
+  display: inline-block;
+  opacity: 0;
+  width: 0;
+
+  -webkit-transition: opacity 0.25s, width 0.25s;
+  -moz-transition: opacity 0.25s, width 0.25s;
+  -o-transition: opacity 0.25s, width 0.25s;
+  transition: opacity 0.25s, width 0.25s;
+}
+
+.has-spinner.disabled {
+  cursor:progress;
+}
+
+.has-spinner.disabled .spinner {
+    opacity: 1;
+    width: auto;
+}
+
+.has-spinner.btn.disabled .spinner {
+    width: 16px;
+}

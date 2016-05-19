@@ -1,9 +1,12 @@
 import polib
-import subprocess
+import time
 
+import tool
+from datetime import datetime
+from rq.decorators import job
 from collections import defaultdict
 from os import listdir, path, makedirs
-from tool import conf, pootle
+from tool import conf, pootle, redis_connection
 
 tm_path = path.join(conf['translations']['path'], '.translation_memory')
 
@@ -78,15 +81,15 @@ def sync_translation_memory(t_memory):
                 print "po_file = {} locale={}".format(po_file, locale)
 
 
+@job('save', connection=redis_connection())
 def save():
-    # update from database
     pootle('sync_stores')
     t_memory = save_tm()
     sync_translation_memory(t_memory)
     pootle('update_stores')
-    # subprocess.call([conf['pootle'], 'update_stores'])
-    # subprocess.call([conf['pootle'], 'refresh_stats'])
-    # print 'finish time = {}'.format(finish)
+    pootle('refresh_stats')
+    tool.set_last_execute('save', time.mktime(datetime.utcnow().timetuple()))
+    return True
 
 if __name__ == '__main__':
     save()

@@ -2,11 +2,11 @@ import shutil
 import os
 import re
 import datetime
+import time
 
-from tool import conf, git, msgmerge, get_locale_path, manage, update_backend
-
-
-locale_path = os.path.join(conf['backend']['path'], 'locale')
+import tool
+from rq.decorators import job
+from tool import conf, git, msgmerge, get_locale_path, manage, update_backend, redis_connection
 
 
 def process_project(project, release):
@@ -35,10 +35,12 @@ def process_project(project, release):
         git('push')
 
 
+@job('commit', connection=redis_connection())
 def commit():
     os.chdir(conf['backend']['path'])
     for project, release in conf['release'].iteritems():
         process_project(project, release)
+    tool.set_last_execute('commit', time.mktime(datetime.datetime.utcnow().timetuple()))
 
 
 if __name__ == "__main__":

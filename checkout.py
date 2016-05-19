@@ -1,11 +1,17 @@
 import shutil
+import tool
+import time
 
-from tool import conf, git, get_locale_path, pootle, manage, update_backend, get_loc_list
+from datetime import datetime
+from rq.decorators import job
+from tool import conf, git, get_locale_path, pootle, manage, update_backend, get_loc_list, redis_connection
 from os import chdir, path, listdir, makedirs
+
 
 locale_path = get_locale_path()
 
 
+@job('checkout', connection=redis_connection())
 def checkout():
     chdir(conf['backend']['path'])
     for project, release in conf['release'].iteritems():
@@ -13,6 +19,8 @@ def checkout():
         process_project(project)
     pootle('update_stores')
     pootle('refresh_stats')
+
+    tool.set_last_execute('checkout', time.mktime(datetime.utcnow().timetuple()))
 
 
 def process_project(project):
