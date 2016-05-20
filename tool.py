@@ -45,7 +45,6 @@ def get_loc_list(locale_path):
 
 def update_backend(release):
     git('stash')
-    remove_pyc_files()
     git('checkout {}'.format(release))
     git('pull origin {}'.format(release))
     if conf['makemessages']:
@@ -60,8 +59,8 @@ def update_backend(release):
                 print "Can't generate pos file!"
 
 
-def remove_pyc_files():
-    for root, dirs, files in os.walk(os.getcwd()):
+def remove_pyc_files(path):
+    for root, dirs, files in os.walk(path):
         for item in files:
             if item.endswith(".pyc"):
                 os.remove(os.path.join(root, item))
