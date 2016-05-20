@@ -45,15 +45,26 @@ def get_loc_list(locale_path):
 
 def update_backend(release):
     git('stash')
+    remove_pyc_files()
     git('checkout {}'.format(release))
-    # git('pull')
+    git('pull origin {}'.format(release))
     if conf['makemessages']:
-        langs = conf['languages'] if conf['languages'] else get_loc_list(locale_path)
+        langs = conf['languages'] if conf['languages'] else get_loc_list(get_locale_path())
         makemessages = "makemessages -l {} {} --no-wrap --no-default-ignore --symlinks"
         for l in langs:
             manage(makemessages.format(l, '-e html,txt,py,htm,ejs'))   # for django files
             manage(makemessages.format(l, '-d djangojs'))              # for js files.
-            manage('po_from_lp -f -l ru')                              # for pos files
+            try:
+                manage('po_from_lp -f -l {}'.format(l))                # for pos files
+            except subprocess.CalledProcessError, ex:
+                print "Can't generate pos file!"
+
+
+def remove_pyc_files():
+    for root, dirs, files in os.walk(os.getcwd()):
+        for item in files:
+            if item.endswith(".pyc"):
+                os.remove(os.path.join(root, item))
 
 
 def set_last_execute(cmd, time_of_execute):
