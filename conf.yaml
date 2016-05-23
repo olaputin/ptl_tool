@@ -5,7 +5,7 @@ backend:
     /Users/olaputin/virtenv/rs/bin/python
 pootle:
   enable:
-    True
+    False
   bin:
     /Users/olaputin/dev/pootle/env/bin/pootle
 
@@ -22,12 +22,13 @@ release:
 #    release/2.16
 
 languages:
-  - ru
+  - pl
 
 commit:
   False
 
 makemessages:
+#  False
   True
 
 redis:

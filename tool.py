@@ -57,6 +57,8 @@ def update_backend(release):
                 manage('po_from_lp -f -l {}'.format(l))                # for pos files
             except subprocess.CalledProcessError, ex:
                 print "Can't generate pos file!"
+        print manage('compilemessages')
+        print manage('compilejsi18n')
 
 
 def remove_pyc_files(path):
