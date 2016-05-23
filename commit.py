@@ -21,12 +21,12 @@ def process_project(project, release):
             msgmerge(new_po, old_po)
             shutil.copy(new_po, old_po)
 
-            if False: # if part == 'pos':
+            if part == 'pos':
                 if conf['makemessages']:
-                    out = manage('po_from_lp -l {} -c'.format(locale))
-                    m = re.search("(?<=is converted to )(.*)$", out)
-                    if m:
-                        git('add {}'.format(m.groups()[0]))
+                    print manage('po_from_lp -l {} -c'.format(locale))
+                    # m = re.search("(?<=is converted to )(.*)$", out)
+                    # if m:
+                    #     git('add {}'.format(m.groups()[0]))
             else:
                 git('add {}'.format(old_po))
     msg = "Bug 99999 - {} update translations".format(datetime.date.today())
