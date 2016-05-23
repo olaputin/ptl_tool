@@ -1,3 +1,4 @@
+# pootle shell
 from django_rq.queues import get_connection
 
 POOTLE_DIRTY_TREEITEMS = 'pootle:dirty:treeitems'

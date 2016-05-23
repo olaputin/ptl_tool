@@ -21,7 +21,7 @@ def process_project(project, release):
             msgmerge(new_po, old_po)
             shutil.copy(new_po, old_po)
 
-            if part == 'pos':
+            if False: # if part == 'pos':
                 if conf['makemessages']:
                     out = manage('po_from_lp -l {} -c'.format(locale))
                     m = re.search("(?<=is converted to )(.*)$", out)
