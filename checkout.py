@@ -16,6 +16,7 @@ def checkout():
     chdir(conf['backend']['path'])
     for project, release in conf['release'].iteritems():
         tool.remove_pyc_files(conf['backend']['path'])
+        git('clean -n')
         update_backend(release)
         process_project(project)
     pootle('update_stores')
