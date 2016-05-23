@@ -39,6 +39,8 @@ def process_project(project, release):
 def commit():
     os.chdir(conf['backend']['path'])
     for project, release in conf['release'].iteritems():
+        tool.remove_pyc_files(conf['backend']['path'])
+        git('clean -n')
         process_project(project, release)
     tool.set_last_execute('commit', time.mktime(datetime.datetime.utcnow().timetuple()))
 
