@@ -51,8 +51,8 @@ def update_backend(release):
         langs = conf['languages'] if conf['languages'] else get_loc_list(get_locale_path())
         makemessages = "makemessages -l {} {} --no-wrap --no-default-ignore --symlinks"
         for l in langs:
-            # manage(makemessages.format(l, '-e html,txt,py,htm,ejs'))   # for django files
-            # manage(makemessages.format(l, '-d djangojs'))              # for js files.
+            manage(makemessages.format(l, '-e html,txt,py,htm,ejs'))   # for django files
+            manage(makemessages.format(l, '-d djangojs'))              # for js files.
             try:
                 manage('po_from_lp -f -l {}'.format(l))                # for pos files
             except subprocess.CalledProcessError, ex:
