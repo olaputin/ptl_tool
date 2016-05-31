@@ -41,7 +41,10 @@ commit:
   True
 
 makemessages:
-  True
+  backend:
+    True
+  pos:
+    True
 
 redis:
   host:
