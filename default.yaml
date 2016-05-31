@@ -23,6 +23,8 @@ release:
     release/2.16
   r2.17:
     release/2.17
+  r2.18:
+    release/2.18
 
 languages:
   - pl
