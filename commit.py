@@ -29,16 +29,17 @@ def process_project(project, release):
                     #     git('add {}'.format(m.groups()[0]))
                 else:
                     git('add {}'.format(old_po))
-    msg = "Bug 99999 - {} update translations".format(datetime.date.today())
+    msg = "Bug 1194 - {} update translations".format(datetime.date.today())
     if conf['commit']:
         git('commit -m', msg)
-        git('push')
+        # git('push')
 
 
 @job('commit', connection=redis_connection())
 def commit():
     os.chdir(conf['backend']['path'])
-    for project, release in conf['release'].iteritems():
+    for project in conf['release']['enable']:
+        release = conf['release']['available'][project]
         tool.remove_pyc_files(conf['backend']['path'])
         git('clean -f')
         process_project(project, release)

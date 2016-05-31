@@ -15,7 +15,8 @@ locale_path = get_locale_path()
 @job('checkout', connection=redis_connection())
 def checkout():
     chdir(conf['backend']['path'])
-    for project, release in conf['release'].iteritems():
+    for project in conf['release']['enable']:
+        release = conf['release']['available'][project]
         tool.remove_pyc_files(conf['backend']['path'])
         git('clean -f')
         update_backend(release)

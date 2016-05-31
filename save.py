@@ -13,7 +13,7 @@ tm_path = path.join(conf['translations']['path'], '.translation_memory')
 
 def collect_tm():
     main_file = defaultdict(lambda: defaultdict(list))
-    for project in conf['release']:
+    for project in conf['release']['enable']:
         project_dir = path.join(conf['translations']['path'], project)
         print 'project = {}'.format(project)
 
@@ -53,7 +53,7 @@ def save_tm():
 
 def sync_translation_memory(t_memory):
     print "sync_translations"
-    for project in conf['release']:
+    for project in conf['release']['enable']:
         project_dir = path.join(conf['translations']['path'], project)
 
         for po_file in listdir(project_dir):
@@ -86,7 +86,7 @@ def save():
     pootle('sync_stores')
     t_memory = save_tm()
     sync_translation_memory(t_memory)
-    pootle('update_stores')
+    pootle('update_stores --force')
     pootle('refresh_stats')
     tool.set_last_execute('save', time.mktime(datetime.utcnow().timetuple()))
     return True
