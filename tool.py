@@ -1,3 +1,4 @@
+
 import os
 import yaml
 import subprocess
@@ -6,12 +7,32 @@ from os import path
 from redis import Redis
 
 
+def __recursive_update(base, updated):
+    for k in updated:
+        if k in base:
+            if isinstance(updated[k], dict) and isinstance(base[k], dict):
+                __recursive_update(base[k], updated[k])
+            else:
+                base[k] = updated[k]
+        else:
+            base[k] = updated[k]
+
+
 def get_conf():
-    with open(path.join(path.dirname(path.realpath(__file__)), 'conf.yaml'), 'r') as conf_file:
+    common_conf = None
+    dir_path = path.dirname(path.realpath(__file__))
+    with open(path.join(dir_path, 'default.yaml'), 'r') as default_conf:
         try:
-            return yaml.load(conf_file)
+            common_conf = yaml.load(default_conf)
         except yaml.YAMLError as exc:
             print(exc)
+
+    conf_path = path.join(dir_path, 'conf.yaml')
+    if os.path.exists(conf_path):
+        with open(conf_path, 'r') as conf_path:
+            __recursive_update(common_conf, yaml.load(conf_path))
+    return common_conf
+
 conf = get_conf()
 
 
@@ -47,18 +68,19 @@ def update_backend(release):
     git('stash')
     git('checkout {}'.format(release))
     git('pull')
-    if conf['makemessages']:
-        langs = conf['languages'] if conf['languages'] else get_loc_list(get_locale_path())
-        makemessages = "makemessages -l {} {} --no-wrap --no-default-ignore --symlinks"
-        for l in langs:
+    langs = conf['languages'] if conf['languages'] else get_loc_list(get_locale_path())
+    makemessages = "makemessages -l {} {} --no-wrap --no-default-ignore --symlinks"
+    for l in langs:
+        if conf['makemessages']['backend']:
             manage(makemessages.format(l, '-e html,txt,py,htm,ejs'))   # for django files
             manage(makemessages.format(l, '-d djangojs'))              # for js files.
+        if conf['makemessages']['pos']:
             try:
                 manage('po_from_lp -f -l {}'.format(l))                # for pos files
             except subprocess.CalledProcessError, ex:
                 print "Can't generate pos file!"
-        print manage('compilemessages')
-        print manage('compilejsi18n')
+    manage('compilemessages')
+    manage('compilejsi18n')
 
 
 def remove_pyc_files(path):

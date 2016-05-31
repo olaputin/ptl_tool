@@ -16,19 +16,19 @@ def process_project(project, release):
         if filename_ext.endswith('.po'):
             filename = os.path.splitext(filename_ext)[0]
             part, locale = filename.split('-')
-            old_po = os.path.join(get_locale_path(), locale, 'LC_MESSAGES', part+'.po')
-            new_po = os.path.join(project_path, filename_ext)
-            msgmerge(new_po, old_po)
-            shutil.copy(new_po, old_po)
+            if locale in conf['languages']:
+                old_po = os.path.join(get_locale_path(), locale, 'LC_MESSAGES', part+'.po')
+                new_po = os.path.join(project_path, filename_ext)
+                msgmerge(new_po, old_po)
+                shutil.copy(new_po, old_po)
 
-            if part == 'pos':
-                if conf['makemessages']:
+                if part == 'pos':
                     print manage('po_from_lp -l {} -c'.format(locale))
                     # m = re.search("(?<=is converted to )(.*)$", out)
                     # if m:
                     #     git('add {}'.format(m.groups()[0]))
-            else:
-                git('add {}'.format(old_po))
+                else:
+                    git('add {}'.format(old_po))
     msg = "Bug 99999 - {} update translations".format(datetime.date.today())
     if conf['commit']:
         git('commit -m', msg)

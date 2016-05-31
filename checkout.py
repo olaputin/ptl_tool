@@ -4,7 +4,8 @@ import time
 
 from datetime import datetime
 from rq.decorators import job
-from tool import conf, git, get_locale_path, pootle, manage, update_backend, get_loc_list, redis_connection
+from save import save
+from tool import conf, git, get_locale_path, update_backend, get_loc_list, redis_connection
 from os import chdir, path, listdir, makedirs
 
 
@@ -19,9 +20,7 @@ def checkout():
         git('clean -f')
         update_backend(release)
         process_project(project)
-    pootle('update_stores')
-    pootle('refresh_stats')
-
+    save()
     tool.set_last_execute('checkout', time.mktime(datetime.utcnow().timetuple()))
 
 

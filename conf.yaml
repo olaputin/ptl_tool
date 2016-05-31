@@ -1,41 +1,12 @@
-backend:
-  path:
-    /Users/olaputin/work/rs/Python-Backends/revelV2
-  bin:
-    /Users/olaputin/virtenv/rs/bin/python
 pootle:
   enable:
     False
-  bin:
-    /Users/olaputin/dev/pootle/env/bin/pootle
 
-translations:
-  path:
-    /Users/olaputin/dev/pootle/env/lib/python2.7/site-packages/pootle/translations
-
-msgmerge:
-  /usr/local/bin/msgmerge
 release:
   master:
     master
-#  r2.16:
-#    release/2.16
+  r2.16:
+    release/2.16
 
 languages:
-  - pl
-
-commit:
-  False
-
-makemessages:
-#  False
-  True
-
-redis:
-  host:
-    localhost
-  port:
-    6379
-
-debug:
-  True
+  - ru
