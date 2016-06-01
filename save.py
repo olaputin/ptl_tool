@@ -86,7 +86,7 @@ def save():
     pootle('sync_stores')
     t_memory = save_tm()
     sync_translation_memory(t_memory)
-    pootle('update_stores --force')
+    pootle('update_stores')
     pootle('refresh_stats')
     tool.set_last_execute('save', time.mktime(datetime.utcnow().timetuple()))
     return True
