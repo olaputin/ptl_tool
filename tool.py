@@ -66,8 +66,9 @@ def get_loc_list(locale_path):
 
 def update_backend(release):
     git('stash')
+    git('fetch')
     git('checkout {}'.format(release))
-    git('pull')
+    git('pull origin {}'.format(release))
     langs = conf['languages'] if conf['languages'] else get_loc_list(get_locale_path())
     makemessages = "makemessages -l {} {} --no-wrap --no-default-ignore --symlinks"
     for l in langs:
