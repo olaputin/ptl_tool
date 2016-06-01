@@ -83,7 +83,7 @@ def sync_translation_memory(t_memory):
 
 @job('save', connection=redis_connection())
 def save():
-    pootle('sync_stores')
+    pootle('sync_stores --force --overwrite')
     t_memory = save_tm()
     sync_translation_memory(t_memory)
     pootle('update_stores')
