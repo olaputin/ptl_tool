@@ -23,16 +23,16 @@ def process_project(project, release):
                 shutil.copy(new_po, old_po)
 
                 if part == 'pos':
-                    print manage('po_from_lp -l {} -c'.format(locale))
-                    # m = re.search("(?<=is converted to )(.*)$", out)
-                    # if m:
-                    #     git('add {}'.format(m.groups()[0]))
+                    out = manage('po_from_lp -l {} -c'.format(locale))
+                    m = re.search("(?<=is converted to )(.*)$", out)
+                    if m:
+                        git('add {}'.format(m.groups()[0]))
                 else:
                     git('add {}'.format(old_po))
     msg = "Bug 1194 - {} update translations".format(datetime.date.today())
     if conf['commit']:
         git('commit -m', msg)
-        # git('push')
+        git('push')
 
 
 @job('commit', connection=redis_connection())
