@@ -29,7 +29,7 @@ def collect_tm():
                 print 'part = {}-{}'.format(part, locale)
                 pofile = polib.pofile(path.join(project_dir, po_file))
                 for entry in pofile:
-                    if entry.msgstr and entry.msgstr not in collect_dict[entry.msgid]:
+                    if entry.msgstr and entry.msgstr not in collect_dict[entry.msgid] and 'fuzzy' not in entry.flags:
                         collect_dict[entry.msgid].append(entry.msgstr)
     return main_file
 
@@ -40,7 +40,7 @@ def save_tm():
         trans_po = polib.POFile()
         print '--------------- {} -----------------'.format(name)
         for msgid, listmstr in part.iteritems():
-            if not len(listmstr) > 1:
+            if len(listmstr) == 1:  # only one value for this id
                 trans_po.append(polib.POEntry(msgid=msgid,
                                               msgstr=listmstr[0]))
             else:
@@ -83,7 +83,8 @@ def sync_translation_memory(t_memory):
 
 @job('save', connection=redis_connection())
 def save():
-    pootle('sync_stores --force --overwrite')
+    for project in conf['release']['enable']:
+        pootle('sync_stores --force --overwrite --project={}'.format(project))
     t_memory = save_tm()
     sync_translation_memory(t_memory)
     pootle('update_stores')
