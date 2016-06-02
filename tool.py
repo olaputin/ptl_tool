@@ -75,13 +75,16 @@ def update_backend(release):
         if conf['makemessages']['backend']:
             manage(makemessages.format(l, '-e html,txt,py,htm,ejs'))   # for django files
             manage(makemessages.format(l, '-d djangojs'))              # for js files.
+    manage('compilemessages')
+    manage('compilejsi18n')
+
+    # TODO: make in one loop
+    for l in langs:
         if conf['makemessages']['pos']:
             try:
                 manage('po_from_lp -f -l {}'.format(l))                # for pos files
             except subprocess.CalledProcessError, ex:
                 print "Can't generate pos file!"
-    manage('compilemessages')
-    manage('compilejsi18n')
 
 
 def remove_pyc_files(path):
