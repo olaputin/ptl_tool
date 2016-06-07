@@ -1,2 +1,4 @@
 /conf.yaml
 *.pyc
+/log
+/.idea
