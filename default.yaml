@@ -60,3 +60,68 @@ redis:
 
 debug:
   True
+
+
+
+logging:
+  version: 1
+  logging_dir: '__LOG_PATH__'
+  formatters:
+    default:
+      format: '%(asctime)s %(levelname)s %(message)s'
+    default:
+      format: '%(asctime)s %(levelname)s %(name)s %(message)s'
+    simple:
+      format: '%(levelname)s %(message)s'
+
+  handlers:
+    common_file:
+      level: DEBUG
+      formatter: default
+      class: 'logging.FileHandler'
+      filename: '__LOG_PATH__/common.log'
+
+    checkout_file:
+      level: DEBUG
+      formatter: default
+      class: 'logging.FileHandler'
+      filename: '__LOG_PATH__/checkout.log'
+
+    commit_file:
+      level: DEBUG
+      formatter: default
+      class: 'logging.FileHandler'
+      filename: '__LOG_PATH__/commit.log'
+
+    save_file:
+      level: DEBUG
+      formatter: default
+      class: 'logging.FileHandler'
+      filename: '__LOG_PATH__/save.log'
+
+    console:
+      level: DEBUG
+      class: 'logging.StreamHandler'
+      formatter: simple
+
+  loggers:
+    checkout:
+      handlers:
+        - checkout_file
+        - console
+        - common_file
+      level: DEBUG
+
+    commit:
+      handlers:
+        - commit_file
+        - console
+        - common_file
+      level: DEBUG
+
+    save:
+      handlers:
+        - save_file
+        - console
+        - common_file
+      level: DEBUG

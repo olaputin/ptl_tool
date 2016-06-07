@@ -1,51 +1,51 @@
 import shutil
-import tool
-import time
-
-from datetime import datetime
-from rq.decorators import job
-from save import save
-from tool import conf, git, get_locale_path, update_backend, get_loc_list, redis_connection
 from os import chdir, path, listdir, makedirs
 
-
-locale_path = get_locale_path()
-
-
-@job('checkout', connection=redis_connection())
-def checkout():
-    chdir(conf['backend']['path'])
-    for project in conf['release']['enable']:
-        release = conf['release']['available'][project]
-        tool.remove_pyc_files(conf['backend']['path'])
-        git('clean -f')
-        update_backend(release)
-        process_project(project)
-    save()
-    tool.set_last_execute('checkout', time.mktime(datetime.utcnow().timetuple()))
+import tool
+from command import Command
+from save import Save
+from tool import conf, get_locale_path, remove_pyc_files
 
 
-def process_project(project):
-    project_path = path.join(conf['translations']['path'], project)
-    if not path.exists(project_path):
-        makedirs(project_path)
-    locale_list = get_loc_list(locale_path)
-    for l in locale_list:
-        if conf['languages'] and l not in conf['languages']:
-            continue
-        copy_locale_files(project_path, l)
+class Checkout(Command):
+    def __init__(self):
+        super(Checkout, self).__init__()
 
+    # @job('checkout', connection=tool.redis_connection())
+    def execute(self):
+        self.logger.info('Start checkout processing')
+        chdir(conf['backend']['path'])
+        for project in conf['release']['enable']:
+            release = conf['release']['available'][project]
+            remove_pyc_files(conf['backend']['path'])
 
-def copy_locale_files(project_path, locale):
-    print "locale -{}- in progress".format(locale)
-    files_dir = path.join(locale_path, locale, 'LC_MESSAGES')
-    for f in listdir(files_dir):
-        if f.endswith('.po'):
-            shutil.copy(path.abspath(path.join(files_dir, f)),
-                        path.join(project_path, '{}-{}.po'.format(path.splitext(f)[0],
-                                                                     locale)))
-            print path.abspath(path.join(files_dir, f))
+            self.git('clean -f')
+            self.update_backend(release)
+            self.process_project(project)
+        self.set_last_execute()
+        self.logger.info('Finish checkout processing')
+
+    def process_project(self, project):
+        project_path = path.join(conf['translations']['path'], project)
+        if not path.exists(project_path):
+            makedirs(project_path)
+        locale_list = tool.get_loc_list()
+        for l in locale_list:
+            if conf['languages'] and l not in conf['languages']:
+                continue
+            self.copy_locale_files(project_path, l)
+
+    def copy_locale_files(self, project_path, locale):
+        self.logger.info("locale -{}- in progress".format(locale))
+        files_dir = get_locale_path(locale)
+        for f in listdir(files_dir):
+            if f.endswith('.po'):
+                shutil.copy(path.abspath(path.join(files_dir, f)),
+                            path.join(project_path, '{}-{}.po'.format(path.splitext(f)[0], locale)))
+                self.logger.info(path.abspath(path.join(files_dir, f)))
 
 
 if __name__ == "__main__":
-    checkout()
+    for cmd in [Checkout(), Save()]:
+        cmd.execute()
+
