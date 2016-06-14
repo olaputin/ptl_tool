@@ -15,6 +15,7 @@ translations:
 
 msgmerge:
   /usr/local/bin/msgmerge
+
 release:
   available:
     master:

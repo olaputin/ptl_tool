@@ -22,6 +22,7 @@ class Checkout(Command):
             self.git('clean -f')
             self.update_backend(release)
             self.process_project(project)
+            self.pootle('update_stores --force --overwrite --project={}'.format(project))
         self.set_last_execute()
         self.logger.info('Finish checkout processing')
 
@@ -46,6 +47,6 @@ class Checkout(Command):
 
 
 if __name__ == "__main__":
-    for cmd in [Checkout(), Save()]:
-        cmd.execute()
+    cmd = Checkout()
+    cmd.execute()
 

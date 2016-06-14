@@ -53,7 +53,6 @@ class Command(object):
 
     def manage(self, command, logger=None):
         cmd = [conf['backend']['bin'], 'manage.py'] + command.split(' ')
-        self.logger.info(' '.join(cmd))
         _, output = self.call(cmd)
         return output
 

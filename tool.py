@@ -1,13 +1,23 @@
-
 import os
+import polib
+import json
+import hashlib
 import yamlconfig
-import subprocess
 from os import path
 
 from redis import Redis
 
 
 conf = yamlconfig.Configs().common_conf
+
+
+def translations_md5(po_path, pos=False):
+    pofile = polib.pofile(po_path)
+    if pos:
+        translations = {entry.msgctxt: entry.msgstr for entry in pofile}
+    else:
+        translations = {entry.msgid: entry.msgstr for entry in pofile}
+    return hashlib.md5(json.dumps(translations, sort_keys=True)).hexdigest()
 
 
 def get_locale_path(locale=None):
@@ -20,7 +30,6 @@ def get_locale_path(locale=None):
 def get_loc_list():
     locale_path = get_locale_path()
     return [l for l in os.listdir(locale_path) if not l.startswith('.')]
-
 
 
 def remove_pyc_files(path):
