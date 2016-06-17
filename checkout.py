@@ -1,10 +1,14 @@
+import glob
+import re
 import shutil
-from os import chdir, path, listdir, makedirs
+from os import chdir, path, makedirs
 
-import tool
+import polib
+
 from command import Command
-from save import Save
-from tool import conf, get_locale_path, remove_pyc_files
+from tools import conf, get_locale_path, remove_pyc_files, convert_split_confs, get_loc_list
+from tools.pofiles import BackendNamePo, OriginNamePo, SplitNamePo, \
+    get_po_files, get_full_path
 
 
 class Checkout(Command):
@@ -18,7 +22,6 @@ class Checkout(Command):
         for project in conf['release']['enable']:
             release = conf['release']['available'][project]
             remove_pyc_files(conf['backend']['path'])
-
             self.git('clean -f')
             self.update_backend(release)
             self.process_project(project)
@@ -28,23 +31,49 @@ class Checkout(Command):
 
     def process_project(self, project):
         project_path = path.join(conf['translations']['path'], project)
-        if not path.exists(project_path):
-            makedirs(project_path)
-        locale_list = tool.get_loc_list()
-        for l in locale_list:
+
+        if path.exists(project_path):
+            shutil.rmtree(project_path)
+
+        for dp in [project_path, path.join(project_path, '.origin')]:
+            makedirs(dp)
+
+        for l in get_loc_list():
             if conf['languages'] and l not in conf['languages']:
                 continue
-            self.copy_locale_files(project_path, l)
+            self.copy_locale_files(project_path, l, project)
 
-    def copy_locale_files(self, project_path, locale):
-        self.logger.info("locale -{}- in progress".format(locale))
+    def _is_splited(self, split_name, entry, result_files):
+        places = dict([(p, line) for p, line in entry.occurrences])
+        if len(places) == 1:
+            for place in places:
+                for pattern in conf['split'][split_name]['path']:
+                    if re.match(pattern, place):
+                        split_file = result_files.setdefault(split_name, polib.POFile())
+                        split_file.append(entry)
+                        return True
+        return False
+
+    def copy_locale_files(self, project_path, locale, release):
+        self.logger.info("Copy split files: {} {}".format(locale, release))
+        split_settings = convert_split_confs()
         files_dir = get_locale_path(locale)
-        for f in listdir(files_dir):
-            if f.endswith('.po'):
-                shutil.copy(path.abspath(path.join(files_dir, f)),
-                            path.join(project_path, '{}-{}.po'.format(path.splitext(f)[0], locale)))
-                self.logger.info(path.abspath(path.join(files_dir, f)))
+        for f in get_po_files(files_dir, BackendNamePo):
 
+            result_files = {}
+            split_name = split_settings.get('-'.join([f.part, locale, release]))
+
+            shutil.copy(get_full_path(f), get_full_path(
+                OriginNamePo(path.join(project_path, '.origin'), f.part, locale)))
+
+            for entry in polib.pofile(get_full_path(f)):
+                if split_name:
+                    if self._is_splited(split_name, entry, result_files):
+                        continue
+                base_file = result_files.setdefault('base', polib.POFile())
+                base_file.append(entry)
+            for name, res_po in result_files.items():
+                res_po.save(get_full_path(SplitNamePo(project_path, f.part, name, locale)))
 
 if __name__ == "__main__":
     cmd = Checkout()

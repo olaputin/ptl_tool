@@ -3,8 +3,9 @@ import polib
 import json
 import hashlib
 import yamlconfig
-from os import path
 
+from os import path
+from itertools import product
 from redis import Redis
 
 
@@ -13,11 +14,17 @@ conf = yamlconfig.Configs().common_conf
 
 def translations_md5(po_path, pos=False):
     pofile = polib.pofile(po_path)
-    if pos:
-        translations = {entry.msgctxt: entry.msgstr for entry in pofile}
-    else:
-        translations = {entry.msgid: entry.msgstr for entry in pofile}
-    return hashlib.md5(json.dumps(translations, sort_keys=True)).hexdigest()
+    msg_id = 'msgctxt' if pos else 'msgid'
+    translations = {entry.__getattribute__(msg_id): entry.msgstr for entry in pofile if not entry.obsolete}
+    return hashlib.md5(json.dumps(translations, sort_keys=True).encode('utf-8')).hexdigest()
+
+
+def convert_split_confs():
+    result = {}
+    for name, settings in conf['split'].items():
+        for ls in product(settings['parts'], settings['languages'], settings['release']):
+            result['{}-{}-{}'.format(*ls)] = name
+    return result
 
 
 def get_locale_path(locale=None):

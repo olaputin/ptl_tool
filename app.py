@@ -1,11 +1,11 @@
-from bottle import route, post, run, template, static_file, get
-import time
 from datetime import datetime
 
-import tool
+from bottle import route, post, run, template, static_file, get
+
 import checkout
-import save
 import commit
+import save
+from tools import tool
 
 
 @route('/')

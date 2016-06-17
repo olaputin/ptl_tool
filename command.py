@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 from logging import config
 
-from tool import conf, get_loc_list, redis_connection
+from tools import conf, get_loc_list, redis_connection
 
 
 class Command(object):
@@ -27,20 +27,22 @@ class Command(object):
             if conf['makemessages']['backend']:
                 self.manage(makemessages.format(l, '-e html,txt,py,htm,ejs'))   # for django files
                 self.manage(makemessages.format(l, '-d djangojs'))              # for js files.
-        self.manage('compilemessages')
-        self.manage('compilejsi18n')
+        if conf['compilemessages']:
+            self.manage('compilemessages')
+            self.manage('compilejsi18n')
 
         # TODO: make in one loop
         for l in langs:
             if conf['makemessages']['pos']:
                 try:
                     self.manage('po_from_lp -f -l {}'.format(l))                # for pos files
-                except subprocess.CalledProcessError, ex:
-                    print "Can't generate pos file!"
+                except subprocess.CalledProcessError as ex:
+                    self.logger.error("Can't generate pos file! Exception: {}".format(ex))
 
     def git(self, command, msg=None):
-        cmd = ['git'] + command.split(' ') + ([msg] if msg else [])
-        self.call(cmd)
+        if conf['git']['enable']:
+            cmd = ['git'] + command.split(' ') + ([msg] if msg else [])
+            self.call(cmd)
 
     def pootle(self, command):
         if conf['pootle']['enable']:

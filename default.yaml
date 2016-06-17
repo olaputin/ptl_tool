@@ -1,17 +1,18 @@
 backend:
   path:
-    /Users/olaputin/work/rs/Python-Backends/revelV2
+    __FIX_IT__
   bin:
-    /Users/olaputin/virtenv/rs/bin/python
+    __FIX_IT_
+
 pootle:
   enable:
     True
   bin:
-    /Users/olaputin/dev/pootle/env/bin/pootle
+    __FIX_IT__
 
 translations:
   path:
-    /Users/olaputin/dev/pootle/env/lib/python2.7/site-packages/pootle/translations
+    __FIX_IT__
 
 msgmerge:
   /usr/local/bin/msgmerge
@@ -31,6 +32,13 @@ release:
     - r2.16
     - r2.17
     - r2.18
+
+git:
+  enable:
+    True
+
+compilemessages:
+  True
 
 
 languages:
@@ -62,7 +70,19 @@ redis:
 debug:
   True
 
-
+split:
+  settings:
+    path:
+      - core/settings.py
+      - dashboard/tips.py
+    languages:
+      - ru
+      - pl
+    release:
+      - master
+    parts:
+      - django
+      - djangojs
 
 logging:
   version: 1
@@ -113,6 +133,13 @@ logging:
         - common_file
       level: DEBUG
 
+    splitcheckout:
+      handlers:
+        - checkout_file
+        - console
+        - common_file
+      level: DEBUG
+
     commit:
       handlers:
         - commit_file
@@ -121,6 +148,13 @@ logging:
       level: DEBUG
 
     save:
+      handlers:
+        - save_file
+        - console
+        - common_file
+      level: DEBUG
+
+    splitsave:
       handlers:
         - save_file
         - console

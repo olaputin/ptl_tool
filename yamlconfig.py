@@ -2,6 +2,10 @@ import os
 import yaml
 
 
+class ConfigException(Exception):
+    pass
+
+
 class Configs(object):
     def __init__(self):
         app_path = os.path.dirname(os.path.realpath(__file__))
@@ -9,6 +13,8 @@ class Configs(object):
             'APPLICATION_PATH': app_path,
             'LOG_PATH': os.path.join(app_path, 'log')
         }
+
+        self._stop_words = ['FIX_IT']
 
         if not os.path.exists(self._defaults['LOG_PATH']):
             os.makedirs(self._defaults['LOG_PATH'])
@@ -43,20 +49,24 @@ class Configs(object):
             else:
                 base[k] = updated[k]
 
-    def _check_data(self, data):
+    def _check_data(self, data, key=None):
         if isinstance(data, dict):
-            for key, val in data.iteritems():
-                data[key] = self._check_data(val)
+            for key, val in data.items():
+                data[key] = self._check_data(val, key)
         elif isinstance(data, list):
-            for key in range(len(data)):
-                data[key] = self._check_data(data[key])
-        elif isinstance(data, str) or isinstance(data, unicode):
-            data = self._update_consts(data)
+            for n in range(len(data)):
+                data[n] = self._check_data(data[n], key)
 
+        elif isinstance(data, str):
+            data = self._update_consts(data, key)
         return data
 
-    def _update_consts(self, val):
-        for k, rep in self._defaults.iteritems():
+    def _update_consts(self, val, key):
+        for stop_word in self._stop_words:
+            sw = '__%s__' % stop_word
+            if val.find(sw) >= 0:
+                raise ConfigException("Config is incorrect: key {} should be fixed".format(key))
+        for k, rep in self._defaults.items():
             q = '__%s__' % k
             if val.find(q) >= 0:
                 val = val.replace(q, rep)
