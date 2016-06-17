@@ -1,4 +1,3 @@
-import glob
 import re
 import shutil
 from os import chdir, path, makedirs
@@ -6,7 +5,7 @@ from os import chdir, path, makedirs
 import polib
 
 from command import Command
-from tools import conf, get_locale_path, remove_pyc_files, convert_split_confs, get_loc_list
+from tools import conf, get_locale_path, remove_pyc_files, convert_split_confs, get_loc_list, backup_translations
 from tools.pofiles import BackendNamePo, OriginNamePo, SplitNamePo, \
     get_po_files, get_full_path
 
@@ -30,6 +29,7 @@ class Checkout(Command):
         self.logger.info('Finish checkout processing')
 
     def process_project(self, project):
+        backup_translations()
         project_path = path.join(conf['translations']['path'], project)
 
         if path.exists(project_path):
@@ -74,6 +74,7 @@ class Checkout(Command):
                 base_file.append(entry)
             for name, res_po in result_files.items():
                 res_po.save(get_full_path(SplitNamePo(project_path, f.part, name, locale)))
+
 
 if __name__ == "__main__":
     cmd = Checkout()

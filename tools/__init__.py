@@ -3,10 +3,12 @@ import polib
 import json
 import hashlib
 import yamlconfig
+import shutil
 
-from os import path
+from os import path, makedirs
 from itertools import product
 from redis import Redis
+from datetime import datetime
 
 
 conf = yamlconfig.Configs().common_conf
@@ -44,6 +46,12 @@ def remove_pyc_files(path):
         for item in files:
             if item.endswith(".pyc"):
                 os.remove(os.path.join(root, item))
+
+
+def backup_translations():
+    name_backup = datetime.now().isoformat()
+    makedirs(name_backup)
+    shutil.copytree(conf['translations']['path'], path.join(conf['translations']['backup'], name_backup))
 
 
 def set_last_execute(cmd, time_of_execute):

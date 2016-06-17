@@ -12,7 +12,9 @@ pootle:
 
 translations:
   path:
-    __FIX_IT__
+    __APPLICATION_PATH__/translations
+  backup:
+    __APPLICATION_PATH__/backup
 
 msgmerge:
   /usr/local/bin/msgmerge
