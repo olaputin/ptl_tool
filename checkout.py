@@ -47,11 +47,12 @@ class Checkout(Command):
         places = dict([(p, line) for p, line in entry.occurrences])
         if len(places) == 1:
             for place in places:
-                for pattern in conf['split'][split_name]['path']:
-                    if re.match(pattern, place):
-                        split_file = result_files.setdefault(split_name, polib.POFile())
-                        split_file.append(entry)
-                        return True
+                for sp in split_name:
+                    for pattern in conf['split'][sp]['path']:
+                        if re.match(pattern, place):
+                            split_file = result_files.setdefault(sp, polib.POFile())
+                            split_file.append(entry)
+                            return True
         return False
 
     def copy_locale_files(self, project_path, locale, release):

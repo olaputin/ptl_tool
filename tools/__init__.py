@@ -5,6 +5,7 @@ import hashlib
 import yamlconfig
 import shutil
 
+from collections import defaultdict
 from os import path, makedirs
 from itertools import product
 from redis import Redis
@@ -22,10 +23,10 @@ def translations_md5(po_path, pos=False):
 
 
 def convert_split_confs():
-    result = {}
+    result = defaultdict(list)
     for name, settings in conf['split'].items():
         for ls in product(settings['parts'], settings['languages'], settings['release']):
-            result['{}-{}-{}'.format(*ls)] = name
+            result['-'.join(ls)].append(name)
     return result
 
 
@@ -49,9 +50,10 @@ def remove_pyc_files(path):
 
 
 def backup_translations():
-    name_backup = datetime.now().isoformat()
-    makedirs(name_backup)
-    shutil.copytree(conf['translations']['path'], path.join(conf['translations']['backup'], name_backup))
+    if conf['translations']['backup']['enable']:
+        name_backup = datetime.now().isoformat()
+        makedirs(name_backup)
+        shutil.copytree(conf['translations']['path'], path.join(conf['translations']['backup']['path'], name_backup))
 
 
 def set_last_execute(cmd, time_of_execute):

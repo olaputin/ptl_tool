@@ -14,7 +14,10 @@ translations:
   path:
     __APPLICATION_PATH__/translations
   backup:
-    __APPLICATION_PATH__/backup
+    enable:
+      True
+    path:
+      __APPLICATION_PATH__/backup
 
 msgmerge:
   /usr/local/bin/msgmerge
@@ -76,7 +79,6 @@ split:
   settings:
     path:
       - core/settings.py
-      - dashboard/tips.py
     languages:
       - ru
       - pl
@@ -87,6 +89,16 @@ split:
     parts:
       - django
       - djangojs
+
+  tips:
+    path:
+      - dashboard/tips.py
+    languages:
+      - ru
+    release:
+      - master
+    parts:
+      - django
 
 logging:
   version: 1
