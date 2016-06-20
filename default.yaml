@@ -80,6 +80,8 @@ split:
     languages:
       - ru
       - pl
+      - et
+      - lt
     release:
       - master
     parts:
