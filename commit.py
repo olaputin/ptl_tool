@@ -42,7 +42,7 @@ class Commit(Command):
                     shutil.copy(new_po, old_po)
                     if is_pos:
                         out = self.manage('po_from_lp -l {} -c'.format(f.locale))
-                        m = re.search("(?<=is converted to )(.*)$", out)
+                        m = re.search("(?<=is converted to )(.*)$", out.decode('utf-8'))
                         if m:
                             self.git('add {}'.format(m.groups()[0]))
                     else:
