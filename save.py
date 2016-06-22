@@ -44,8 +44,9 @@ class Save(Command):
                 pofile = polib.pofile(get_full_path(f))
                 for entry in pofile:
                     splited_entry = part_storage[(entry.msgid, entry.msgctxt)]
-                    entry.msgstr = splited_entry.msgstr
-                    entry.flags = splited_entry.flags
+                    if splited_entry:
+                        entry.msgstr = splited_entry.msgstr
+                        entry.flags = splited_entry.flags
                 pofile.save()
 
     def collect_tm(self):
