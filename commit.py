@@ -3,7 +3,7 @@ import os
 import re
 import shutil
 
-from command import Command
+from command import Command, CompilemsgException
 from tools import conf, get_locale_path, translations_md5, remove_pyc_files
 from tools.pofiles import SplitNamePo, OriginNamePo, BackendNamePo, \
     get_full_path, get_filename, get_po_files
@@ -27,7 +27,9 @@ class Commit(Command):
         self.logger.info("Finish commit processing")
 
     def process_project(self, project, release):
-        self.update_backend(release)
+        if not self.update_backend(release):
+            return
+
         project_path = os.path.join(conf['translations']['path'], project)
         changed = []
         for f in get_po_files(project_path, SplitNamePo):
@@ -42,13 +44,19 @@ class Commit(Command):
                     shutil.copy(new_po, old_po)
                     if is_pos:
                         out = self.manage('po_from_lp -l {} -c'.format(f.locale))
-                        m = re.search("(?<=is converted to )(.*)$", out.decode('utf-8'))
+                        m = re.search("(?<=is converted to )(.*)$", out)
                         if m:
                             self.git('add {}'.format(m.groups()[0]))
                     else:
                         self.git('add {}'.format(old_po))
+        self.git('clean -f')
+        try:
+            self.compilemessages()
+        except CompilemsgException as ex:
+            self.logger.error(ex)
+            return
         msg = "Bug 1194 - {} update translations".format(datetime.date.today())
-        if changed and conf['commit']:
+        if changed and conf['git']['commit']:
             self.logger.info("Changed files: {}".format([item for item in changed]))
             self.git('commit -m', msg)
             self.git('push')

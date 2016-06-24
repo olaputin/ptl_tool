@@ -1,10 +1,15 @@
 import logging
 import subprocess
 import time
+import re
 from datetime import datetime
 from logging import config
 
 from tools import conf, get_loc_list, redis_connection
+
+
+class CompilemsgException(Exception):
+    pass
 
 
 class Command(object):
@@ -27,9 +32,11 @@ class Command(object):
             if conf['makemessages']['backend']:
                 self.manage(makemessages.format(l, '-e html,txt,py,htm,ejs'))   # for django files
                 self.manage(makemessages.format(l, '-d djangojs'))              # for js files.
-        if conf['compilemessages']:
-            self.manage('compilemessages')
-            self.manage('compilejsi18n')
+        try:
+            self.compilemessages()
+        except CompilemsgException as ex:
+            self.logger.error(ex)
+            return False
 
         # TODO: make in one loop
         for l in langs:
@@ -38,6 +45,15 @@ class Command(object):
                     self.manage('po_from_lp -f -l {}'.format(l))                # for pos files
                 except subprocess.CalledProcessError as ex:
                     self.logger.error("Can't generate pos file! Exception: {}".format(ex))
+        return True
+
+    def compilemessages(self):
+        if conf['compilemessages']:
+            for cmd in ['compilemessages', 'compilejsi18n']:
+                output = self.manage(cmd)
+                if re.search(r"CommandError:", output):
+                    raise CompilemsgException(output)
+
 
     def git(self, command, msg=None):
         if conf['git']['enable']:
@@ -66,7 +82,7 @@ class Command(object):
                 stderr=subprocess.STDOUT
             )
             process_output, _ = command_line_process.communicate()
-            self.logger.info(process_output)
+            self.logger.info(process_output.decode('utf-8'))
         except (OSError, subprocess.CalledProcessError) as exception:
             self.logger.info('Exception occured: ' + str(exception))
             self.logger.info('Subprocess failed')
@@ -74,7 +90,7 @@ class Command(object):
         else:
             # no exception was raised
             self.logger.info('Subprocess finished')
-        return True, process_output
+        return True, process_output.decode('utf-8')
 
     @property
     def last_execute(self):

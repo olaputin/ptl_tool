@@ -41,6 +41,8 @@ release:
 git:
   enable:
     True
+  commit:
+    True
 
 compilemessages:
   True
@@ -56,9 +58,6 @@ languages:
   - it
   - lt
   - th
-
-commit:
-  True
 
 makemessages:
   backend:
