@@ -2,9 +2,10 @@ from collections import defaultdict
 from os import path, makedirs
 
 import polib
+from rq.decorators import job
 
 from command import Command
-from tools import conf
+from tools import conf, redis_connection
 from tools.pofiles import SplitNamePo, OriginNamePo, get_po_files, get_full_path, get_filename
 tm_path = path.join(conf['translations']['path'], '.translation_memory')
 
@@ -14,7 +15,6 @@ class Save(Command):
     def __init__(self):
         super(Save, self).__init__()
 
-    # @job('save', connection=redis_connection())
     def execute(self):
         self.logger.info('Start save processing')
         for project in conf['release']['enable']:
@@ -106,6 +106,11 @@ class Save(Command):
 
                 self.logger.info("po_file = {} locale={}".format(get_filename(f), f.locale))
 
-if __name__ == '__main__':
+
+@job('save', connection=redis_connection())
+def run():
     cmd = Save()
     cmd.execute()
+
+if __name__ == '__main__':
+    run()

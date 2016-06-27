@@ -86,3 +86,16 @@ def make_task(callback):
     q = Queue(connection=redis_conn)
     job = q.enqueue(callback)
     return job.id
+
+
+def job_to_dict(job):
+    return {
+        'id': job.id,
+        'status': job.status,
+        'created_at': job.created_at.isoformat(),
+        'ended_at': job.ended_at.isoformat() if job.ended_at else None,
+        'is_finished': job.is_finished,
+        'is_started': job.is_started,
+        'origin': job.origin,
+        'exec_info': job.exc_info
+    }

@@ -3,8 +3,10 @@ import os
 import re
 import shutil
 
+from rq.decorators import job
+
 from command import Command, CompilemsgException, LngPkgTestException
-from tools import conf, get_locale_path, translations_md5, remove_pyc_files
+from tools import conf, get_locale_path, translations_md5, remove_pyc_files, redis_connection
 from tools.pofiles import SplitNamePo, OriginNamePo, BackendNamePo, \
     get_full_path, get_filename, get_po_files
 
@@ -14,7 +16,6 @@ class Commit(Command):
     def __init__(self):
         super(Commit, self).__init__()
 
-    # @job('commit', connection=redis_connection())
     def execute(self):
         self.logger.info("Start commit processing")
         os.chdir(conf['backend']['path'])
@@ -68,6 +69,12 @@ class Commit(Command):
         if not re.search(r"OK", output):
             raise LngPkgTestException(output)
 
-if __name__ == "__main__":
+
+@job('commit', connection=redis_connection())
+def run():
     cmd = Commit()
     cmd.execute()
+
+
+if __name__ == "__main__":
+    run()

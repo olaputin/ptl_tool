@@ -1,11 +1,13 @@
+import json
 from datetime import datetime
 
-from bottle import route, post, run, template, static_file, get
+from bottle import route, post, run, template, static_file, get, HTTPResponse
+from rq import Queue, get_failed_queue
+from rq.job import  Job
 
-import checkout
-import commit
-import save
-from tools import tool
+from tools import get_last_execute, redis_get_wip, redis_get_queue, job_to_dict, redis_connection
+
+OPERATIONS = ['checkout', 'save', 'commit']
 
 
 @route('/')
@@ -14,44 +16,32 @@ def index():
     last_exec = {}
     for oper in ['commit', 'checkout', 'save']:
         status[oper] = get_operation_status(oper)
-        last_exec_time = tool.get_last_execute(oper)
+        last_exec_time = get_last_execute(oper)
         last_exec[oper] = datetime.fromtimestamp(int(float(last_exec_time))).isoformat() \
             if last_exec_time else ""
 
     return template('index.tpl', status=status, last_exec=last_exec)
 
 
-@post('/checkout')
-def checkout_repo():
-    wip = tool.redis_get_wip('checkout')
-    if not wip:
-        checkout.checkout.delay()
-        return []
-    return wip
+@post('/exec/<operation>')
+def execute_operation(operation=None):
+    if operation in OPERATIONS:
+        module = __import__(operation)
+        job = module.run.delay()
+        return HTTPResponse(body=json.dumps(job_to_dict(job)), status=200)
+    return HTTPResponse(status=404)
 
 
-@post('/save')
-def save_translations():
-    wip = tool.redis_get_wip('save')
-    if not wip:
-        save.save.delay()
-        return []
-    return wip
+@get('/status')
+def get_operation_status():
+    result = {}
+    for op in OPERATIONS:
+        q = Queue(op, connection=redis_connection())
+        result[op] = [job_to_dict(j) for j in q.jobs]
+    fq = get_failed_queue(redis_connection())
+    result['failed'] = [job_to_dict(j) for j in fq.jobs]
+    return HTTPResponse(body=json.dumps(result), status=200)
 
-
-@post('/commit')
-def commit_translations():
-    wip = tool.redis_get_wip('commit')
-    if not wip:
-        commit.commit.delay()
-        return []
-    return wip
-
-
-@get('/status/<operation>')
-def get_operation_status(operation=None):
-    if operation:
-        return tool.redis_get_wip(operation) or tool.redis_get_queue(operation)
 
 @route('/static/:path#.+#', name='static')
 def static(path):

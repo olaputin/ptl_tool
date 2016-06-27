@@ -2,10 +2,12 @@ import re
 import shutil
 from os import chdir, path, makedirs
 
+from rq.decorators import job
+
 import polib
 
 from command import Command
-from tools import conf, get_locale_path, remove_pyc_files, convert_split_confs, get_loc_list, backup_translations
+from tools import conf, get_locale_path, remove_pyc_files, convert_split_confs, get_loc_list, backup_translations, redis_connection
 from tools.pofiles import BackendNamePo, OriginNamePo, SplitNamePo, \
     get_po_files, get_full_path
 
@@ -14,7 +16,6 @@ class Checkout(Command):
     def __init__(self):
         super(Checkout, self).__init__()
 
-    # @job('checkout', connection=tool.redis_connection())
     def execute(self):
         self.logger.info('Start checkout processing')
         chdir(conf['backend']['path'])
@@ -77,7 +78,13 @@ class Checkout(Command):
                 res_po.save(get_full_path(SplitNamePo(project_path, f.part, name, locale)))
 
 
-if __name__ == "__main__":
+@job('checkout', connection=redis_connection())
+def run():
     cmd = Checkout()
     cmd.execute()
+
+
+if __name__ == "__main__":
+    run()
+
 
