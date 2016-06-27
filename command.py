@@ -12,6 +12,10 @@ class CompilemsgException(Exception):
     pass
 
 
+class LngPkgTestException(Exception):
+    pass
+
+
 class Command(object):
     def __init__(self):
         config.dictConfig(conf['logging'])
@@ -54,9 +58,9 @@ class Command(object):
                 if re.search(r"CommandError:", output):
                     raise CompilemsgException(output)
 
-
     def git(self, command, msg=None):
-        if conf['git']['enable']:
+        cmd = command.split(' ')
+        if conf['git']['enable'] and conf['git'].get(cmd[0], True):
             cmd = ['git'] + command.split(' ') + ([msg] if msg else [])
             self.call(cmd)
 

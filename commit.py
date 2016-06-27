@@ -3,7 +3,7 @@ import os
 import re
 import shutil
 
-from command import Command, CompilemsgException
+from command import Command, CompilemsgException, LngPkgTestException
 from tools import conf, get_locale_path, translations_md5, remove_pyc_files
 from tools.pofiles import SplitNamePo, OriginNamePo, BackendNamePo, \
     get_full_path, get_filename, get_po_files
@@ -52,15 +52,21 @@ class Commit(Command):
         self.git('clean -f')
         try:
             self.compilemessages()
-        except CompilemsgException as ex:
+            self.test_lng_pkgs()
+        except (CompilemsgException, LngPkgTestException) as ex:
             self.logger.error(ex)
             return
+
         msg = "Bug 1194 - {} update translations".format(datetime.date.today())
-        if changed and conf['git']['commit']:
+        if changed:
             self.logger.info("Changed files: {}".format([item for item in changed]))
             self.git('commit -m', msg)
             self.git('push')
 
+    def test_lng_pkgs(self):
+        output = self.manage('test --noinput tests.test_language_package')
+        if not re.search(r"OK", output):
+            raise LngPkgTestException(output)
 
 if __name__ == "__main__":
     cmd = Commit()

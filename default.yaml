@@ -43,6 +43,8 @@ git:
     True
   commit:
     True
+  pull:
+    True
 
 compilemessages:
   True
