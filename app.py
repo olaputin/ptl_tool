@@ -10,7 +10,7 @@ from tools import get_last_execute, redis_get_wip, redis_get_queue, job_to_dict,
 OPERATIONS = ['checkout', 'save', 'commit']
 
 
-@route('/')
+# @route('/')
 def index():
     status = {}
     last_exec = {}
@@ -46,5 +46,10 @@ def get_operation_status():
 @route('/static/:path#.+#', name='static')
 def static(path):
     return static_file(path, root='static')
+
+
+@get('/test')
+def test():
+    return HTTPResponse(body="OK", status=200)
 
 run(host='localhost', port=8080)
