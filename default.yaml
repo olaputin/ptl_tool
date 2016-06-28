@@ -73,8 +73,11 @@ redis:
   port:
     6379
 
+
 debug:
   True
+
+app_prefix: ''
 
 split:
   settings:

@@ -5,7 +5,7 @@ from bottle import route, post, run, template, static_file, get, HTTPResponse
 from rq import Queue, get_failed_queue
 from rq.job import  Job
 
-from tools import get_last_execute, redis_get_wip, redis_get_queue, job_to_dict, redis_connection
+from tools import get_last_execute, job_to_dict, redis_connection, conf
 
 OPERATIONS = ['checkout', 'save', 'commit']
 
@@ -23,7 +23,7 @@ def index():
     return template('index.tpl', status=status, last_exec=last_exec)
 
 
-@post('/exec/<operation>')
+@post('{}/exec/<operation>'.format(conf['app_prefix']))
 def execute_operation(operation=None):
     if operation in OPERATIONS:
         module = __import__(operation)
@@ -32,7 +32,7 @@ def execute_operation(operation=None):
     return HTTPResponse(status=404)
 
 
-@get('/status')
+@get('{}/status'.format(conf['app_prefix']))
 def get_operation_status():
     result = {}
     for op in OPERATIONS:
@@ -48,7 +48,7 @@ def static(path):
     return static_file(path, root='static')
 
 
-@get('/test')
+@get('{}/test'.format(conf['app_prefix']))
 def test():
     return HTTPResponse(body="OK", status=200)
 
