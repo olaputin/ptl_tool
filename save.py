@@ -2,7 +2,6 @@ from collections import defaultdict
 from os import path, makedirs
 
 import polib
-from rq.decorators import job
 
 from command import Command
 from tools import conf, redis_connection
@@ -107,7 +106,7 @@ class Save(Command):
                 self.logger.info("po_file = {} locale={}".format(get_filename(f), f.locale))
 
 
-@job('save', connection=redis_connection())
+# @job('save', connection=redis_connection())
 def run():
     cmd = Save()
     cmd.execute()

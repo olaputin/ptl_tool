@@ -80,22 +80,15 @@ def redis_get_queue(queue_name):
     return redis.lrange(name, 0, -1)
 
 
-def make_task(callback):
-    from rq import Queue
-    redis_conn = Redis()
-    q = Queue(connection=redis_conn)
-    job = q.enqueue(callback)
-    return job.id
-
-
 def job_to_dict(job):
-    return {
-        'id': job.id,
-        'status': job.status,
-        'created_at': job.created_at.isoformat(),
-        'ended_at': job.ended_at.isoformat() if job.ended_at else None,
-        'is_finished': job.is_finished,
-        'is_started': job.is_started,
-        'origin': job.origin,
-        'exec_info': job.exc_info
-    }
+    exclude_args = ['_args', '_data', '_dependency_id', '_func_name', '_instance', '_kwargs',
+                    'connection']
+    result = {}
+    for k, v in job.__dict__.items():
+        if k not in exclude_args:
+            if k.startswith('_'):
+                k = k[1:]
+            if isinstance(v, datetime):
+                v = v.isoformat()
+            result[k] = v
+    return result

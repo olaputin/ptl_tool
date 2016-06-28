@@ -1,34 +1,41 @@
-.operation_button {
-    width: 100px;
-    margin-bottom: 10px;
-}
-
 .revel_color {
     color: rgb(0, 163, 224);
     font-size: 61.25px;
     font-weight: normal;
 }
 
-.spinner {
-  display: inline-block;
-  opacity: 0;
-  width: 0;
 
-  -webkit-transition: opacity 0.25s, width 0.25s;
-  -moz-transition: opacity 0.25s, width 0.25s;
-  -o-transition: opacity 0.25s, width 0.25s;
-  transition: opacity 0.25s, width 0.25s;
+.jobs_status {
+    width: 70%;
+    padding-left: 1%;
+    background-color: #f0f0f0;
+    margin-left: 8%;
 }
 
-.has-spinner.disabled {
-  cursor:progress;
+.header {
+    text-shadow: 0px 1px gray;
+    font-size: 16px;
+    border-bottom: 1px solid darkgray;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
 }
 
-.has-spinner.disabled .spinner {
-    opacity: 1;
-    width: auto;
+.row.job {
+    padding-bottom: 3px;
 }
 
-.has-spinner.btn.disabled .spinner {
-    width: 16px;
+.finished {
+    color: green;
+}
+
+.failed {
+    color: darkred;
+}
+
+.queued {
+    color: dodgerblue;
+}
+
+.started {
+    color: orange;
 }
