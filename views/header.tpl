@@ -22,7 +22,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
 
 <script src="../static/ptl_tool.js"></script>
-<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="../static/style.css">
 
 <div class="row">
     <div class="col-md-1"></div>

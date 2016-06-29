@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 
 from bottle import route, post, run, template, static_file, get, HTTPResponse
 from rq import Queue, get_failed_queue
@@ -13,6 +12,7 @@ OPERATIONS = ['checkout', 'save', 'commit']
 def make_response(status=None, body=None):
     return HTTPResponse(body=json.dumps({'content': body or {}}), status=status or 200,
                         headers={'Content-Type': 'application/json '})
+
 
 def all_jobs():
     r_conn = redis_connection()
@@ -58,6 +58,7 @@ def get_operation_status():
 @get('/jobs')
 def get_jobs():
     return make_response(body=all_jobs())
+
 
 @route('/static/:path#.+#', name='static')
 def static(path):

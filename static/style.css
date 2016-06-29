@@ -8,8 +8,16 @@
 .jobs_status {
     width: 70%;
     padding-left: 1%;
-    background-color: #f0f0f0;
     margin-left: 8%;
+}
+
+
+.row.job:nth-child(odd) {
+    background: rgba(0, 163, 224,0.1);
+}
+
+.row.job:nth-child(even) {
+    background: #f0f0f0;
 }
 
 .header {
@@ -19,6 +27,7 @@
     padding-bottom: 5px;
     margin-bottom: 10px;
 }
+
 
 .row.job {
     padding-bottom: 3px;

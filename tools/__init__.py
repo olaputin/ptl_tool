@@ -89,6 +89,6 @@ def job_to_dict(job):
             if k.startswith('_'):
                 k = k[1:]
             if isinstance(v, datetime):
-                v = v.isoformat()
+                v = v.strftime("%B %d, %Y, %H:%M")
             result[k] = v
     return result
