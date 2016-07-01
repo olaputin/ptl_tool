@@ -31,11 +31,14 @@ release:
       release/2.17
     r2.18:
       release/2.18
+    r2.19:
+      release/2.19
   enable:
     - master
     - r2.16
     - r2.17
     - r2.18
+    - r2.19
 
 git:
   enable:
