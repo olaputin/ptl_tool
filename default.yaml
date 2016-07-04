@@ -23,7 +23,7 @@ msgmerge: /usr/local/bin/msgmerge
 
 release:
   available:
-    master2:
+    master:
       branch: master
       index: 1.0
     r2.16:
@@ -35,7 +35,7 @@ release:
     r2.19:
       branch: release/2.19
   enable:
-    - master2
+    - master
     - r2.16
     - r2.17
     - r2.18
@@ -89,7 +89,7 @@ split:
       - et
       - lt
     release:
-      - master2
+      - master
     parts:
       - django
       - djangojs

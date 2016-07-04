@@ -107,9 +107,9 @@ class Save(Command):
 
                 self.logger.info('src_trans = {}'.format(get_full_path(f)))
                 self.logger.info('t_memory = {}'.format(get_full_path(OriginNamePo(tm_path, f.part, f.locale))))
-                src_untranslated = [e for e in src_trans if not e.translated() and not e.obsolete]
+                # src_untranslated = [e for e in src_trans if not e.translated() and not e.obsolete]
                 part_memory = t_memory['-'.join([f.part, f.locale])]
-                for src_entry in src_untranslated:
+                for src_entry in src_trans:  # for all src
                     entry = part_memory[src_entry.msgid]
                     if entry:
                         new_msgstr, _ = entry[0]
