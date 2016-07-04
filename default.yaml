@@ -106,12 +106,6 @@ logging:
       format: '%(levelname)s %(message)s'
 
   handlers:
-    common_file:
-      level: DEBUG
-      formatter: default
-      class: 'logging.FileHandler'
-      filename: '__LOG_PATH__/common.log'
-
     checkout_file:
       level: DEBUG
       formatter: default
@@ -140,37 +134,31 @@ logging:
       handlers:
         - checkout_file
         - console
-        - common_file
       level: DEBUG
 
     splitcheckout:
       handlers:
         - checkout_file
         - console
-        - common_file
       level: DEBUG
 
     commit:
       handlers:
         - commit_file
         - console
-        - common_file
       level: DEBUG
 
     save:
       handlers:
         - save_file
         - console
-        - common_file
       level: DEBUG
 
     splitsave:
       handlers:
         - save_file
         - console
-        - common_file
       level: DEBUG
-
 
 rqworker:
   timeout: 3600
