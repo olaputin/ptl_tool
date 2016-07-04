@@ -24,4 +24,4 @@ def get_filename(file_obj):
 
 
 def get_full_path(file_obj):
-    return os.path.join(file_obj[0], get_filename(file_obj))
+    return os.path.join(file_obj.path, get_filename(file_obj))

@@ -28,8 +28,8 @@ class Command(object):
     def update_backend(self, release):
         self.git('stash')
         self.git('fetch')
-        self.git('checkout {}'.format(release))
-        self.git('pull origin {}'.format(release))
+        self.git('checkout {}'.format(release['branch']))
+        self.git('pull origin {}'.format(release['branch']))
         langs = conf['languages'] if conf['languages'] else get_loc_list()
         makemessages = "makemessages -l {} {} --no-wrap --no-default-ignore --symlinks"
         for l in langs:

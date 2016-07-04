@@ -17,17 +17,27 @@ class Commit(Command):
         super(Commit, self).__init__()
 
     def execute(self):
+        result = {}
         self.logger.info("Start commit processing")
         os.chdir(conf['backend']['path'])
         for project in conf['release']['enable']:
             release = conf['release']['available'][project]
             remove_pyc_files(conf['backend']['path'])
             self.git('clean -f')
-            self.process_project(project, release)
+            result = self.process_project(project, release)
         self.set_last_execute()
         self.logger.info("Finish commit processing")
+        return result
 
     def process_project(self, project, release):
+        result = {
+            'status': True,
+            'lng_test': {'status': True,
+                         'out': ''},
+            'compilemessages': {'status': True,
+                                'out': ''}
+        }
+
         if not self.update_backend(release):
             return
 
@@ -54,15 +64,21 @@ class Commit(Command):
         try:
             self.compilemessages()
             self.test_lng_pkgs()
-        except (CompilemsgException, LngPkgTestException) as ex:
+        except CompilemsgException as ex:
             self.logger.error(ex)
-            return
+            result['compilemessages'] = {'status': False, 'out': ex}
+        except LngPkgTestException as ex:
+            self.logger.error(ex)
+            result['lng_test'] = {'status': False, 'out': ex}
 
+        result['status'] = all([result[part]['status'] for part in ['compilemessages', 'lng_test']])
         msg = "Bug 1194 - {} update translations".format(datetime.date.today())
-        if changed:
+        if not result['status'] and changed:
             self.logger.info("Changed files: {}".format([item for item in changed]))
             self.git('commit -m', msg)
             self.git('push')
+
+        return result
 
     def test_lng_pkgs(self):
         output = self.manage('test --noinput tests.test_language_package')
@@ -73,8 +89,7 @@ class Commit(Command):
 @job('commit', connection=redis_connection())
 def run():
     cmd = Commit()
-    cmd.execute()
-
+    return cmd.execute()
 
 if __name__ == "__main__":
     run()
