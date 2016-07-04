@@ -23,7 +23,7 @@ msgmerge: /usr/local/bin/msgmerge
 
 release:
   available:
-    master:
+    master2:
       branch: master
       index: 1.0
     r2.16:
@@ -35,7 +35,7 @@ release:
     r2.19:
       branch: release/2.19
   enable:
-    - master
+    - master2
     - r2.16
     - r2.17
     - r2.18
