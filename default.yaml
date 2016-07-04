@@ -89,7 +89,7 @@ split:
       - et
       - lt
     release:
-      - master
+      - master2
     parts:
       - django
       - djangojs

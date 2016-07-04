@@ -15,6 +15,7 @@
             <div class="col-md-2">{{item['origin']}}</div>
             <div class="col-md-5">{{item['created_at']}}</div>
             <div class="col-md-3 {{item['status']}} status">{{item['status']}}</div>
+            <div class="col-md-1">{{item['result']}}</div>
     </div>
     % end
         </div>
