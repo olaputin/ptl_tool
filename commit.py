@@ -63,7 +63,7 @@ class Commit(Command):
         self.git('clean -f')
         try:
             self.compilemessages()
-            self.test_lng_pkgs()
+            # self.test_lng_pkgs()
         except CompilemsgException as ex:
             self.logger.error(ex)
             result['compilemessages'] = {'status': False, 'out': ex}
