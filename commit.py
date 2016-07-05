@@ -73,7 +73,7 @@ class Commit(Command):
 
         result['status'] = all([result[part]['status'] for part in ['compilemessages', 'lng_test']])
         msg = "Bug 1194 - {} update translations".format(datetime.date.today())
-        if not result['status'] and changed:
+        if result['status'] and changed:
             self.logger.info("Changed files: {}".format([item for item in changed]))
             self.git('commit -m', msg)
             self.git('push')
