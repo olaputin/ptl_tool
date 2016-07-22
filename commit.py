@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 import shutil
+import json
 
 from rq.decorators import job
 
@@ -27,7 +28,7 @@ class Commit(Command):
             result = self.process_project(project, release)
         self.set_last_execute()
         self.logger.info("Finish commit processing")
-        return result
+        return json.dumps(result)
 
     def process_project(self, project, release):
         result = {

@@ -22,14 +22,6 @@ def all_jobs():
 
 @route('/')
 def index():
-    # status = {}
-    # last_exec = {}
-    # for oper in ['commit', 'checkout', 'save']:
-    #     status[oper] = get_operation_status(oper)
-    #     last_exec_time = get_last_execute(oper)
-    #     last_exec[oper] = datetime.fromtimestamp(int(float(last_exec_time))).isoformat() \
-    #         if last_exec_time else ""
-
     return template('index.tpl', jobs=all_jobs())
 
 

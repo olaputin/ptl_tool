@@ -48,3 +48,13 @@
 .started {
     color: orange;
 }
+
+.status_info {
+    padding-left: 10px;
+    color: darkgrey;
+}
+
+.status > span:first-child {
+    width: 50px;
+    float: left;
+}

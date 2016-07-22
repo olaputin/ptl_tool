@@ -30,7 +30,7 @@ class Save(Command):
             self.pootle('update_stores --project={}'.format(project))
         self.pootle('refresh_stats')
         self.logger.info('Finish save processing')
-        return True
+        return json.dumps({'status': True})
 
     def collect_splitted(self):
         for project in conf['release']['enable']:
@@ -135,8 +135,8 @@ class Save(Command):
 
 def run():
     cmd = Save()
-    cmd.execute()
-    return json.dumps({'status': 'finished'})
+    return cmd.execute()
+
 
 if __name__ == '__main__':
     run()
