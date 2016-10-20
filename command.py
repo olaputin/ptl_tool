@@ -62,7 +62,7 @@ class Command(object):
         cmd = command.split(' ')
         if conf['git']['enable'] and conf['git'].get(cmd[0], True):
             cmd = ['git'] + command.split(' ') + ([msg] if msg else [])
-            self.call(cmd)
+            return self.call(cmd)
 
     def pootle(self, command):
         if conf['pootle']['enable']:

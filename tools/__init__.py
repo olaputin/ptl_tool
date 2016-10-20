@@ -42,7 +42,8 @@ def get_loc_list():
     return [l for l in os.listdir(locale_path) if not l.startswith('.')]
 
 
-def remove_pyc_files(path):
+def remove_pyc_files(path=None):
+    path = path or conf['backend']['path']
     for root, dirs, files in os.walk(path):
         for item in files:
             if item.endswith(".pyc"):
