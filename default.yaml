@@ -4,6 +4,9 @@ backend:
   bin:
     __FIX_IT_
 
+pos:
+  path:
+    __FIX_IT__
 pootle:
   enable:
     True

@@ -35,18 +35,6 @@ def get_dict_from_strings(strings_filename, ignore_not_translnatable=True, order
     return result
 
 
-def proccess_args():
-    parser = ArgumentParser(description='''Script for generaring strings_clean.c file
-    args                                    based on Localizable.strings file from POS repository
-                                        with removed unused strings.''')
-    parser.add_argument('-d', type=str, required=True, dest='destination',
-                        help='Destination of generated strings_clean.c file')
-    parser.add_argument(type=str, dest='path', nargs='+',
-                        help='Path of POS repositories')
-
-    return parser.parse_args()
-
-
 def get_localizable_strings_path(repo_path):
     lang_pack_path_to_test = os.path.join(repo_path, 'POS/POS/en.lproj/Localizable.strings')
     if not os.path.exists(lang_pack_path_to_test):
@@ -74,9 +62,7 @@ def get_occurrence_msg_id(repo_root, check_list_msg_id):
 
 
 if __name__ == '__main__':
-
-    args = proccess_args()
-    repo_path = args.path[0]
+    repo_path = conf['pos']['path']
 
     backend_path = conf['backend']['path']
     result_full_path = os.path.join(os.path.join(backend_path, 'lang_packages'), 'pos_occurrences.txt')
