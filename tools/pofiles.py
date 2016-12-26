@@ -3,9 +3,9 @@ import glob
 from collections import namedtuple
 
 
-SplitNamePo = namedtuple('SplitName', ['path', 'part', 'split', 'locale'])
-OriginNamePo = namedtuple('OriginName', ['path', 'part', 'locale'])
-BackendNamePo = namedtuple('ProjectNamePo', ['path', 'part'])
+SplitNamePo = namedtuple('SplitName', ['path', 'part', 'split', 'locale'])  # ex. some/path/django-test-ru.po
+OriginNamePo = namedtuple('OriginName', ['path', 'part', 'locale'])  # ex. some/path/django-ru.po
+BackendNamePo = namedtuple('ProjectNamePo', ['path', 'part'])  # ex. some/path/django.po
 
 
 def get_parts(full_path, file_type):

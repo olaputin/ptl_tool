@@ -22,6 +22,7 @@ def translations_md5(po_path, pos=False):
     return hashlib.md5(json.dumps(translations, sort_keys=True).encode('utf-8')).hexdigest()
 
 
+# Generation all possible pairs for split settings (path, release, language)
 def convert_split_confs():
     result = defaultdict(list)
     for name, settings in conf['split'].items():

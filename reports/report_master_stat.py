@@ -1,15 +1,15 @@
-from command import Command
-import os
-from tools import conf, get_locale_path, remove_pyc_files
-from polib import pofile
-from datetime import datetime, timedelta, timezone
-from dateutil import parser
-from report_common_stat import parts, ReleaseCount, CreateReport, CountType, ReleaseInfo, MsgIds
-from tools.report import count_pos
 import csv
-import codecs
-import re
-from collections import OrderedDict
+import os
+from datetime import datetime, timedelta
+
+from dateutil import parser
+from polib import pofile
+
+from command import Command
+from reports.report_common_stat import parts, ReleaseCount, CreateReport, CountType, ReleaseInfo, MsgIds
+from tools import conf, get_locale_path, remove_pyc_files
+from tools.report import count_pos
+
 day_format = "%Y-%m-%d"
 locale = 'de'
 

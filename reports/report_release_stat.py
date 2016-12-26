@@ -1,10 +1,12 @@
 import csv
 import os
+
+from polib import pofile
+
 from command import Command
-from report_common_stat import parts, CreateReport
+from reports.report_common_stat import parts, CreateReport
 from tools import conf, get_locale_path
 from tools.report import count_pos, count_translated_pos
-from polib import pofile
 
 
 class ReleaseStatReport(Command):
