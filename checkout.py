@@ -2,11 +2,11 @@ import re
 import shutil
 from os import chdir, path, makedirs
 
+import polib
 from rq.decorators import job
 
-import polib
-
 from command import Command
+from parse_msg_id import parse_pos_occurrences
 from tools import conf, get_locale_path, remove_pyc_files, convert_split_confs, get_loc_list, backup_translations, redis_connection
 from tools.pofiles import BackendNamePo, OriginNamePo, SplitNamePo, \
     get_po_files, get_full_path
@@ -24,6 +24,8 @@ class Checkout(Command):
             remove_pyc_files(conf['backend']['path'])
             self.git('clean -f')
             self.update_backend(release)
+            self.logger.info('Parse POS occurrences')
+            parse_pos_occurrences()
             self.process_project(project)
             self.pootle('update_stores --force --overwrite --project={}'.format(project))
         self.set_last_execute()

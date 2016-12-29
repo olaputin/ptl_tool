@@ -61,7 +61,7 @@ def get_occurrence_msg_id(repo_root, check_list_msg_id):
     return occurrences
 
 
-if __name__ == '__main__':
+def parse_pos_occurrences():
     repo_path = conf['pos']['path']
 
     backend_path = conf['backend']['path']
@@ -75,7 +75,8 @@ if __name__ == '__main__':
         result.writelines(["{}:{}\n".format(msg_id, ','.join(set(occurrences[msg_id]))) for msg_id in occurrences])
 
 
-
+if __name__ == '__main__':
+    parse_pos_occurrences()
 
 
 
