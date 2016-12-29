@@ -4,6 +4,7 @@ import time
 import re
 from datetime import datetime
 from logging import config
+from parse_msg_id import parse_pos_occurrences
 
 from tools import conf, get_loc_list, redis_connection
 
@@ -46,6 +47,8 @@ class Command(object):
         for l in langs:
             if conf['makemessages']['pos']:
                 try:
+                    self.logger.info('Parse POS occurrences')
+                    parse_pos_occurrences()
                     self.manage('po_from_lp -f -l {}'.format(l))                # for pos files
                 except subprocess.CalledProcessError as ex:
                     self.logger.error("Can't generate pos file! Exception: {}".format(ex))
