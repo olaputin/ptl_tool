@@ -104,15 +104,44 @@ split:
       - core/settings.py
       - dashboard/tips.py
     languages:
-      - ru
       - pl
+      - ru
+      - de
+      - es
       - et
+      - fr
+      - it
       - lt
+      - th
     release:
       - master
     parts:
       - django
       - djangojs
+      - pos
+
+  fuel_retail:
+    path:
+      - fuel_retail
+      - inventoryx/static/inventoryx/js/webstock.js
+      - inventoryx/views/webstock_views.py
+      - inventoryx/forms/wetstock_forms.py
+    languages:
+      - pl
+      - ru
+      - de
+      - es
+      - et
+      - fr
+      - it
+      - lt
+      - th
+    release:
+      - master
+    parts:
+      - django
+      - djangojs
+      - pos
 
 logging:
   version: 1
