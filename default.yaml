@@ -509,6 +509,55 @@ split:
       - djangojs
       - pos
 
+  minimal:
+    path:
+      - /POS/POS/RSPOSSettingsViewController.m
+      - /POS/POS/RSSalesIncludeViewController.m
+      - /POS/POS/RSSettingsViewController+EmployeeSalesSummary.m
+      - /POS/POS/RSSalesReportViewController.m
+      - /POS/POS/RSSalesReportPreviewViewController.m
+      - /POS/POS/RSTotalCashViewController.m
+      - /POS/POS/RSPaymentLogViewController.m
+      - /POS/POS/RSTotalCashViewController.storyboard
+      - /POS/POS/RSManagerMasterViewController.m
+      - /POS/POS/RSSettingsViewController.m
+      - /POS/POS/OrderScreenViewController.m
+      - /POS/POS/OrderScreenViewController+MoveTransfer.m
+      - /POS/POS/OrderScreenViewController+CashRegister.m
+      - /POS/POS/OrderItemViewCell.h
+      - /POS/POS/MultiMenuItemView.h
+      - /POS/POS/MenuCategory.h
+      - /POS/POS/MenuProduct.h
+      - /POS/POS/VoidService.h
+      - /POS/POS/ProductInfoView.h
+      - /POS/POS/MatrixAddViewNew.h
+      - /POS/POS/AppliedServiceFee.h
+      - /POS/POS/AppliedServiceFeeViewCell.h
+      - /POS/POS/SFeeService.h
+      - /POS/POS/RSOrderFullscreenView.h
+      - /POS/POS/OrderDiscountViewCell.h
+      - /POS/POS/ExchangeViewCell.h
+      - /POS/POS/PurchaseOrderItem+External.h
+      - /POS/POS/PayView.m
+      - /POS/POS/OrderService.m
+
+    languages:
+      - pl
+      - ru
+      - de
+      - es
+      - et
+      - fr
+      - it
+      - lt
+      - th
+    release:
+      - master
+    parts:
+      - django
+      - djangojs
+      - pos
+
 
 logging:
   version: 1
