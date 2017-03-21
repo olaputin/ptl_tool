@@ -114,7 +114,10 @@ class Save(Command):
                         new_msgstr, _ = entry[0]
                         self.logger.info("{} changed {}: {} - {}".format('fuzzy' if 'fuzzy' in src_entry.flags else '',
                                                                          src_entry.msgid, src_entry.msgstr, new_msgstr))
-                        if src_entry.msgstr and new_msgstr and src_entry.msgstr != new_msgstr:
+
+                        if (src_entry.msgstr and 'fuzzy' not in src_entry.flags) \
+                                and new_msgstr \
+                                and src_entry.msgstr != new_msgstr:
                             continue
                         src_entry.msgstr = new_msgstr
                         if 'fuzzy' in src_entry.flags:
