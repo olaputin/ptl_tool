@@ -49,6 +49,8 @@ release:
       branch: release/2.24
     r2.25:
       branch: release/2.25
+    r2.26:
+      branch: release/2.26
 
   enable:
     - master
