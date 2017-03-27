@@ -36,11 +36,14 @@ class Commit(Command):
             'lng_test': {'status': True,
                          'out': ''},
             'compilemessages': {'status': True,
-                                'out': ''}
+                                'out': ''},
+            'branch': ''
         }
 
         if not self.update_backend(release):
             return
+        branch_name = '_'.join(['bug_1194', project.replace('.', ''), datetime.datetime.now().strftime('%Y%m%d_%H%M')])
+        self.git('checkout -b {}'.format(branch_name))
 
         project_path = os.path.join(conf['translations']['path'], project)
         changed = []
@@ -77,7 +80,8 @@ class Commit(Command):
         if result['status'] and changed:
             self.logger.info("Changed files: {}".format([item for item in changed]))
             self.git('commit -m', msg)
-            self.git('push')
+            self.git('push --set-upstream origin {}'.format(branch_name))
+            result['branch'] = branch_name
 
         return result
 
