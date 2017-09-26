@@ -51,6 +51,8 @@ release:
       branch: release/2.25
     r2.26:
       branch: release/2.26
+    r2.31:
+      branch: release/2.31
 
   enable:
     - master
@@ -62,6 +64,7 @@ release:
     - r2.21
     - r2.22
     - r2.23
+    - r2.31
   default_index: 0.5
 
 git:
