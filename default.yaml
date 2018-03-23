@@ -65,6 +65,7 @@ release:
     - r2.22
     - r2.23
     - r2.31
+    - r2.39
   default_index: 0.5
 
 git:
