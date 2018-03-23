@@ -53,6 +53,8 @@ release:
       branch: release/2.26
     r2.31:
       branch: release/2.31
+    r2.39:
+      branch: release/2.39
 
   enable:
     - master
