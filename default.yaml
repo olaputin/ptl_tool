@@ -57,11 +57,11 @@ release:
       branch: release/2.39
     r2.40:
       branch: release/2.40
-    r2.43:
+    release2.43:
       branch: release/2.43
-    r2.44:
+    release2.44:
       branch: release/2.44
-    r2.45:
+    release2.45:
       branch: release/2.45
 
 
