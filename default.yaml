@@ -63,6 +63,8 @@ release:
       branch: release/2.44
     release2.45:
       branch: release/2.45
+    release2.51:
+      branch: release/2.51
 
 
   enable:
@@ -81,6 +83,7 @@ release:
     - r2.43
     - r2.44
     - r2.45
+    - r2.51
   default_index: 0.5
 
 git:
