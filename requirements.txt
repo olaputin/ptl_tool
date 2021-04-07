@@ -1,7 +1,7 @@
 amqp==1.4.9
 anyjson==0.3.3
 billiard==3.3.0.23
-bottle==0.12.9
+bottle==0.12.19
 click==6.6
 gitdb==0.6.4
 GitPython==2.0.3
